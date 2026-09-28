@@ -1,0 +1,6 @@
+CustomerID,CustomerName,EmailAddress,Age,Gender,Region,AnnualIncome
+C001,  luis  alcazar ,luis@company.org,32,Male,North,65000
+C002,LUIS ALCAZAR,luis2@gmail.com,28,Female,South,45000
+C003,maria garcia,maria@company.org,45,Female,East,85000
+C004,John Doe,john@yahoo.com,22,Male,West,30000
+C005, ,null@email.com,55,Male,North,95000

@@ -1,0 +1,6 @@
+ProductID,ProductName,Category,Color,ListPrice,StandardCost,Weight,ProductSKU
+P001,Mountain Bike 200 Black,Bikes,Black,1200.555,800.12,10.2,MTB-200-BLK
+P002,Road Bike 300 Red,Bikes,Red,850.123,600.50,8.5,RDB-300-RED
+P003,Helmet Pro 50 White,Accessories,White,150.999,50.25,1.2,HLM-50-WHT
+P004,Gloves XL 20 Black,Accessories,Black,45.50,20.10,0.3,GLV-20-BLK
+P005,Chain Heavy 10 Silver,Accessories,Silver,25.00,10.00,2.1,CHN-10-SLV

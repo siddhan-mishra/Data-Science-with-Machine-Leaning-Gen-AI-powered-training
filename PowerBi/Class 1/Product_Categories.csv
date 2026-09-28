@@ -1,0 +1,6 @@
+CategoryID,CategoryName,SubCategoryID,SubCategoryName
+1, Bikes ,101,Helmets-Pro
+2,Mountain Bikes,102,Gloves-XL
+3,Accessories,103,Chains-Heavy
+,Null Category,104,Pedals
+4,Bikes,105,Seats-Comfort
