@@ -1,0 +1,10 @@
+This question 
+
+Please provide instructions to create dropdowns or buttons in Excel that apply selected percentages (1, 10, 20, 30, 40, 50%) to all numeric values in a table, with an option to preview results without overwriting the originals.
+
+given the excel data I want to create somthing like a button where if I click lets say 10% then all the data in the table will be the 10% so if ists 609000 for capacity 125/150kva for 200-260v then its 10% will the the answer and that needs to be done in the table. I need such buttons for 1- 20 30 40 and 50 percent in dropdowns like I need to create drop downs
+
+
+
+using data validation -> list and 
+formulas 
