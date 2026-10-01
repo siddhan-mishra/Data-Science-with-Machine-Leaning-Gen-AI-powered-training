@@ -133,6 +133,7 @@ show variables like 'secure_file_priv';
 
 
 
+
 LOAD DATA  INFILE "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/synthetic_credit_card_customer_behavior_dataset.csv"
 
 INTO TABLE credit_card_customer
