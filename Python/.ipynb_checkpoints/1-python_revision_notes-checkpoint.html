@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python Revision Notes</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f;
+    --surface: #141417;
+    --surface2: #1c1c21;
+    --border: #2a2a32;
+    --accent: #7c6af7;
+    --accent2: #4ecdc4;
+    --accent3: #ff6b6b;
+    --amber: #f7c948;
+    --text: #e8e8f0;
+    --muted: #7a7a8c;
+    --code-bg: #0a0a0c;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Syne', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  header {
+    padding: 3rem 2rem 2rem;
+    max-width: 900px;
+    margin: 0 auto;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent3));
+  }
+  .header-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent2);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+  header h1 {
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 800;
+    letter-spacing: -1px;
+    line-height: 1.1;
+  }
+  header h1 span { color: var(--accent); }
+  .header-meta {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+  }
+  .meta-pill {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    background: var(--surface2);
+    color: var(--muted);
+    border: 1px solid var(--border);
+  }
+
+  /* TOC */
+  .toc {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 0 2rem;
+  }
+  .toc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 8px;
+  }
+  .toc-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 13px;
+    transition: all 0.15s;
+  }
+  .toc-item:hover { border-color: var(--accent); color: var(--text); background: var(--surface2); }
+  .toc-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+    min-width: 20px;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 2rem 4rem;
+  }
+
+  /* SECTION */
+  .section {
+    margin-bottom: 2.5rem;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--surface);
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface2);
+  }
+  .section-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    background: rgba(124, 106, 247, 0.12);
+    border: 1px solid rgba(124, 106, 247, 0.3);
+    padding: 3px 9px;
+    border-radius: 5px;
+    white-space: nowrap;
+  }
+  .section-header h2 {
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+  }
+  .section-body { padding: 1.25rem 1.5rem; }
+
+  /* CONTENT ELEMENTS */
+  p { font-size: 14px; color: var(--muted); line-height: 1.7; margin-bottom: 10px; }
+  p:last-child { margin-bottom: 0; }
+  strong { color: var(--text); font-weight: 600; }
+
+  ul, ol { padding-left: 1.4rem; margin-bottom: 10px; }
+  li { font-size: 14px; color: var(--muted); line-height: 1.7; margin-bottom: 3px; }
+  li strong { color: var(--text); }
+
+  /* CODE */
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    color: #c9d1d9;
+    overflow-x: auto;
+    margin: 12px 0;
+    line-height: 1.6;
+  }
+  .cm { color: #6a737d; }   /* comment */
+  .ck { color: #ff7b72; }   /* keyword */
+  .cs { color: #a5d6ff; }   /* string */
+  .cn { color: #79c0ff; }   /* number */
+  .cf { color: #d2a8ff; }   /* function */
+  .co { color: var(--accent2); } /* output */
+
+  /* TABLE */
+  .tbl-wrap { overflow-x: auto; margin: 12px 0; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th {
+    text-align: left;
+    padding: 8px 12px;
+    background: var(--surface2);
+    color: var(--text);
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid var(--border);
+  }
+  td {
+    padding: 8px 12px;
+    color: var(--muted);
+    border-bottom: 1px solid rgba(42,42,50,0.5);
+    vertical-align: top;
+  }
+  tr:last-child td { border-bottom: none; }
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 1px 6px;
+    border-radius: 4px;
+    color: var(--accent2);
+  }
+
+  /* CALLOUT */
+  .note {
+    background: rgba(78,205,196,0.07);
+    border: 1px solid rgba(78,205,196,0.2);
+    border-left: 3px solid var(--accent2);
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin: 12px 0;
+    font-size: 13px;
+    color: #a0e0db;
+  }
+  .warn {
+    background: rgba(247,201,72,0.07);
+    border: 1px solid rgba(247,201,72,0.2);
+    border-left: 3px solid var(--amber);
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin: 12px 0;
+    font-size: 13px;
+    color: #f0d580;
+  }
+
+  /* GRID CARDS */
+  .card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 12px 0; }
+  @media (max-width: 600px) { .card-grid { grid-template-columns: 1fr; } }
+  .card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 14px;
+  }
+  .card h4 { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+  .card p { font-size: 13px; margin-bottom: 0; }
+  .card ul { margin-bottom: 0; }
+  .card li { font-size: 13px; }
+  .card.accent-purple { border-top: 2px solid var(--accent); }
+  .card.accent-teal   { border-top: 2px solid var(--accent2); }
+  .card.accent-red    { border-top: 2px solid var(--accent3); }
+  .card.accent-amber  { border-top: 2px solid var(--amber); }
+
+  /* BADGE */
+  .badge {
+    display: inline-block;
+    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin: 2px;
+  }
+  .badge-purple { background: rgba(124,106,247,0.15); color: #b4a9ff; border: 1px solid rgba(124,106,247,0.3); }
+  .badge-teal   { background: rgba(78,205,196,0.12); color: #6fd8d3; border: 1px solid rgba(78,205,196,0.3); }
+  .badge-red    { background: rgba(255,107,107,0.12); color: #ff9898; border: 1px solid rgba(255,107,107,0.3); }
+  .badge-amber  { background: rgba(247,201,72,0.12); color: #f5d97a; border: 1px solid rgba(247,201,72,0.3); }
+
+  /* TWO-COL */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 10px 0; }
+  @media (max-width: 580px) { .two-col { grid-template-columns: 1fr; } }
+
+  /* VALID / INVALID */
+  .vi-row { display: flex; gap: 12px; flex-wrap: wrap; margin: 8px 0; }
+  .vi-item {
+    flex: 1;
+    min-width: 140px;
+    padding: 8px 12px;
+    border-radius: 7px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+  }
+  .valid   { background: rgba(78,205,196,0.08); border: 1px solid rgba(78,205,196,0.25); color: var(--accent2); }
+  .invalid { background: rgba(255,107,107,0.08); border: 1px solid rgba(255,107,107,0.25); color: #ff9898; }
+  .vi-label { font-size: 10px; letter-spacing: 1px; margin-bottom: 6px; opacity: 0.6; text-transform: uppercase; }
+
+  /* FOOTER */
+  footer {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 1.5rem 2rem;
+    border-top: 1px solid var(--border);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-tag">// revision notes</div>
+  <h1><span>Python</span> Programming<br>Quick Revision</h1>
+  <div class="header-meta">
+    <span class="meta-pill">11 Topics</span>
+    <span class="meta-pill">Beginner → Intermediate</span>
+    <span class="meta-pill">Python 3.x</span>
+  </div>
+</header>
+
+<!-- TABLE OF CONTENTS -->
+<nav class="toc">
+  <div class="toc-grid">
+    <a href="#s1" class="toc-item"><span class="toc-num">01</span> Intro to Python</a>
+    <a href="#s2" class="toc-item"><span class="toc-num">02</span> Human vs Machine Language</a>
+    <a href="#s3" class="toc-item"><span class="toc-num">03</span> Compilers &amp; Interpreters</a>
+    <a href="#s4" class="toc-item"><span class="toc-num">04</span> Hybrid Languages</a>
+    <a href="#s5" class="toc-item"><span class="toc-num">05</span> Computer Programs</a>
+    <a href="#s6" class="toc-item"><span class="toc-num">06</span> Variables in Python</a>
+    <a href="#s7" class="toc-item"><span class="toc-num">07</span> Rules for Variables</a>
+    <a href="#s8" class="toc-item"><span class="toc-num">08</span> Python Data Types</a>
+    <a href="#s9" class="toc-item"><span class="toc-num">09</span> Numeric Data Types</a>
+    <a href="#s10" class="toc-item"><span class="toc-num">10</span> Literals &amp; Constants</a>
+    <a href="#s11" class="toc-item"><span class="toc-num">11</span> Type Conversion</a>
+  </div>
+</nav>
+
+<main>
+
+  <!-- 01 INTRO -->
+  <div class="section" id="s1">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <h2>Introduction to Python Programming</h2>
+    </div>
+    <div class="section-body">
+      <p>Python is a <strong>high-level, interpreted, general-purpose</strong> programming language created by <strong>Guido van Rossum</strong> in 1991. Known for its simple, English-like syntax.</p>
+      <div class="card-grid">
+        <div class="card accent-purple">
+          <h4>Key Features</h4>
+          <ul>
+            <li>Easy to read and write</li>
+            <li>Interpreted (runs line by line)</li>
+            <li>Dynamically typed</li>
+            <li>Platform independent</li>
+          </ul>
+        </div>
+        <div class="card accent-teal">
+          <h4>Used In</h4>
+          <ul>
+            <li>AI &amp; Machine Learning</li>
+            <li>Web Development</li>
+            <li>Data Science</li>
+            <li>Automation / Scripting</li>
+          </ul>
+        </div>
+      </div>
+<pre><span class="cf">print</span>(<span class="cs">"Hello, World!"</span>)  <span class="cm"># Your first Python program</span></pre>
+    </div>
+  </div>
+
+  <!-- 02 HUMAN VS MACHINE -->
+  <div class="section" id="s2">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2>Understanding Language — Human vs Computer</h2>
+    </div>
+    <div class="section-body">
+      <p>Computers only understand <strong>Machine Language</strong> (binary: 0s and 1s). Human-readable languages must be translated before the CPU can execute them.</p>
+      <div class="tbl-wrap">
+        <table>
+          <tr><th>Level</th><th>Example</th><th>Understood By</th></tr>
+          <tr><td><strong>High-level language</strong></td><td><code>x = 5 + 3</code></td><td>Humans / Programmers</td></tr>
+          <tr><td><strong>Assembly language</strong></td><td><code>MOV AX, 5</code></td><td>Low-level programmers</td></tr>
+          <tr><td><strong>Machine language</strong></td><td><code>01001000 00000101</code></td><td>CPU only</td></tr>
+        </table>
+      </div>
+      <div class="note">Python is a high-level language — very close to English, far from machine code. A translator (interpreter/compiler) bridges the gap.</div>
+    </div>
+  </div>
+
+  <!-- 03 COMPILERS & INTERPRETERS -->
+  <div class="section" id="s3">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2>Compilers and Interpreters</h2>
+    </div>
+    <div class="section-body">
+      <div class="two-col">
+        <div class="card accent-purple">
+          <h4>Compiler</h4>
+          <p>Translates the <strong>entire</strong> source code into machine code at once before running.</p>
+          <ul>
+            <li>Faster execution after compile</li>
+            <li>All errors shown at once</li>
+            <li>Creates a separate output file</li>
+            <li>Examples: C, C++</li>
+          </ul>
+        </div>
+        <div class="card accent-teal">
+          <h4>Interpreter</h4>
+          <p>Translates and executes code <strong>line by line</strong> at runtime.</p>
+          <ul>
+            <li>Easier to debug (error stops at that line)</li>
+            <li>Slower than compiled</li>
+            <li>No separate output file</li>
+            <li>Examples: Python, JavaScript</li>
+          </ul>
+        </div>
+      </div>
+      <div class="tbl-wrap" style="margin-top:12px">
+        <table>
+          <tr><th>Compiler</th><th>Interpreter</th></tr>
+          <tr><td>Translates whole program at once</td><td>Translates line by line</td></tr>
+          <tr><td>Faster after compilation</td><td>Slower execution</td></tr>
+          <tr><td>Generates object/exe file</td><td>No file generated</td></tr>
+          <tr><td>Errors shown after full scan</td><td>Stops at first error</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- 04 HYBRID -->
+  <div class="section" id="s4">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <h2>Hybrid Programming Languages</h2>
+    </div>
+    <div class="section-body">
+      <p>A <strong>hybrid language</strong> uses both a compiler and an interpreter. Source code is first compiled into an intermediate form called <strong>bytecode</strong>, which is then interpreted by a virtual machine.</p>
+<pre><span class="cm"># Python execution flow:</span>
+Source Code (.py)
+    → <span class="ck">Compiler</span>  → Bytecode (.pyc)
+    → <span class="ck">PVM</span> (Python Virtual Machine)
+    → Output</pre>
+      <div class="card-grid">
+        <div class="card accent-purple">
+          <h4>Python (Hybrid)</h4>
+          <p>Compiles <code>.py</code> → <code>.pyc</code> bytecode, then PVM interprets it.</p>
+        </div>
+        <div class="card accent-teal">
+          <h4>Java (Hybrid)</h4>
+          <p>Compiles <code>.java</code> → <code>.class</code> bytecode, then JVM interprets it.</p>
+        </div>
+      </div>
+      <div class="note">This hybrid approach gives Python portability — the same bytecode runs on any machine that has the PVM installed.</div>
+    </div>
+  </div>
+
+  <!-- 05 COMPUTER PROGRAMS -->
+  <div class="section" id="s5">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <h2>Understanding Computer Programs</h2>
+    </div>
+    <div class="section-body">
+      <p>A <strong>computer program</strong> is a set of instructions that tells the computer how to solve a problem or perform a task.</p>
+      <div class="card-grid">
+        <div class="card accent-purple"><h4>Input</h4><p>Data received from user, file, or network.</p></div>
+        <div class="card accent-teal"><h4>Processing</h4><p>Calculations and logic applied to input.</p></div>
+        <div class="card accent-amber"><h4>Output</h4><p>Result displayed to user or saved.</p></div>
+        <div class="card accent-red"><h4>Storage</h4><p>Data stored in variables, files, or databases.</p></div>
+      </div>
+<pre>name = <span class="cf">input</span>(<span class="cs">"Enter your name: "</span>)   <span class="cm"># Input</span>
+greeting = <span class="cs">"Hello, "</span> + name          <span class="cm"># Processing</span>
+<span class="cf">print</span>(greeting)                       <span class="cm"># Output</span></pre>
+    </div>
+  </div>
+
+  <!-- 06 VARIABLES -->
+  <div class="section" id="s6">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <h2>Understanding Variables in Python</h2>
+    </div>
+    <div class="section-body">
+      <p>A <strong>variable</strong> is a named memory location used to store a value. In Python, you don't declare a type — it is assigned automatically when a value is given.</p>
+<pre>age   = <span class="cn">20</span>          <span class="cm"># int — Python detects type automatically</span>
+name  = <span class="cs">"Riya"</span>      <span class="cm"># str</span>
+marks = <span class="cn">98.5</span>        <span class="cm"># float</span>
+flag  = <span class="ck">True</span>        <span class="cm"># bool</span>
+
+<span class="cf">print</span>(<span class="cf">type</span>(age))   <span class="co"># &lt;class 'int'&gt;</span></pre>
+      <div class="note">Think of a variable as a labelled box — the label is the name, the contents are the value. The contents can change anytime.</div>
+      <div class="tbl-wrap">
+        <table>
+          <tr><th>Variable</th><th>Value</th><th>Type</th></tr>
+          <tr><td><code>age</code></td><td>20</td><td><code>int</code></td></tr>
+          <tr><td><code>name</code></td><td>"Riya"</td><td><code>str</code></td></tr>
+          <tr><td><code>marks</code></td><td>98.5</td><td><code>float</code></td></tr>
+          <tr><td><code>flag</code></td><td>True</td><td><code>bool</code></td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- 07 RULES -->
+  <div class="section" id="s7">
+    <div class="section-header">
+      <span class="section-num">07</span>
+      <h2>Rules for Declaring Variables</h2>
+    </div>
+    <div class="section-body">
+      <ul>
+        <li>Must <strong>start with a letter or underscore</strong> (<code>_</code>)</li>
+        <li>Cannot start with a number</li>
+        <li>Can contain letters, digits, and underscores only</li>
+        <li><strong>Case-sensitive</strong> — <code>Name</code> and <code>name</code> are different variables</li>
+        <li>Cannot use Python <strong>reserved keywords</strong> (e.g. <code>if</code>, <code>for</code>, <code>while</code>, <code>True</code>…)</li>
+        <li>No spaces allowed in variable names</li>
+      </ul>
+      <div class="vi-row">
+        <div class="vi-item valid">
+          <div class="vi-label">✓ Valid</div>
+          my_var<br>_score<br>student1<br>totalMarks
+        </div>
+        <div class="vi-item invalid">
+          <div class="vi-label">✗ Invalid</div>
+          2var &nbsp;← starts with number<br>
+          my-var &nbsp;← hyphen not allowed<br>
+          my var &nbsp;← space not allowed<br>
+          for &nbsp;← reserved keyword
+        </div>
+      </div>
+      <div class="note"><strong>Convention:</strong> Use <code>snake_case</code> in Python — e.g. <code>student_age</code>, <code>total_marks</code>. Always use meaningful names.</div>
+    </div>
+  </div>
+
+  <!-- 08 DATA TYPES -->
+  <div class="section" id="s8">
+    <div class="section-header">
+      <span class="section-num">08</span>
+      <h2>Python Data Types (PyDT)</h2>
+    </div>
+    <div class="section-body">
+      <p>Every value in Python has a <strong>data type</strong>. Python detects the type automatically — this is called <strong>dynamic typing</strong>.</p>
+      <div class="tbl-wrap">
+        <table>
+          <tr><th>Category</th><th>Type(s)</th><th>Example</th></tr>
+          <tr><td>Numeric</td><td><code>int</code>, <code>float</code>, <code>complex</code></td><td><code>5</code>, <code>3.14</code>, <code>2+3j</code></td></tr>
+          <tr><td>Text</td><td><code>str</code></td><td><code>"Hello"</code></td></tr>
+          <tr><td>Boolean</td><td><code>bool</code></td><td><code>True</code>, <code>False</code></td></tr>
+          <tr><td>Sequence</td><td><code>list</code>, <code>tuple</code>, <code>range</code></td><td><code>[1, 2, 3]</code></td></tr>
+          <tr><td>Mapping</td><td><code>dict</code></td><td><code>{"key": "value"}</code></td></tr>
+          <tr><td>Set</td><td><code>set</code>, <code>frozenset</code></td><td><code>{1, 2, 3}</code></td></tr>
+          <tr><td>None</td><td><code>NoneType</code></td><td><code>None</code></td></tr>
+        </table>
+      </div>
+<pre>x = <span class="cn">10</span>
+<span class="cf">print</span>(<span class="cf">type</span>(x))    <span class="co"># &lt;class 'int'&gt;</span>
+
+y = <span class="cs">"Python"</span>
+<span class="cf">print</span>(<span class="cf">type</span>(y))    <span class="co"># &lt;class 'str'&gt;</span></pre>
+    </div>
+  </div>
+
+  <!-- 09 NUMERIC DT -->
+  <div class="section" id="s9">
+    <div class="section-header">
+      <span class="section-num">09</span>
+      <h2>Numeric Data Types — int &amp; float</h2>
+    </div>
+    <div class="section-body">
+      <div class="card-grid">
+        <div class="card accent-purple">
+          <h4>int (Integer)</h4>
+          <p>Whole numbers — positive, negative, or zero. No decimal point. Unlimited size in Python 3.</p>
+        </div>
+        <div class="card accent-teal">
+          <h4>float</h4>
+          <p>Numbers with a decimal point or in scientific notation (e.g. <code>1.2e3</code> = 1200.0).</p>
+        </div>
+        <div class="card accent-amber">
+          <h4>complex</h4>
+          <p>Numbers with real + imaginary parts. Written as <code>a + bj</code>. Access parts via <code>.real</code> and <code>.imag</code>.</p>
+        </div>
+        <div class="card accent-red">
+          <h4>Arithmetic operators</h4>
+          <p><code>+</code> add &nbsp; <code>-</code> sub &nbsp; <code>*</code> mul<br><code>/</code> div &nbsp; <code>//</code> floor &nbsp; <code>%</code> mod &nbsp; <code>**</code> power</p>
+        </div>
+      </div>
+<pre>a = <span class="cn">10</span>       <span class="cm"># int</span>
+b = <span class="cn">3.5</span>      <span class="cm"># float</span>
+c = <span class="cn">2</span>+<span class="cn">3j</span>     <span class="cm"># complex</span>
+
+<span class="cf">print</span>(a + b)    <span class="co"># 13.5   (int + float = float)</span>
+<span class="cf">print</span>(a // <span class="cn">3</span>)  <span class="co"># 3      (floor division)</span>
+<span class="cf">print</span>(a % <span class="cn">3</span>)   <span class="co"># 1      (remainder)</span>
+<span class="cf">print</span>(<span class="cn">2</span> ** <span class="cn">4</span>)  <span class="co"># 16     (2 to the power 4)</span></pre>
+    </div>
+  </div>
+
+  <!-- 10 LITERALS & CONSTANTS -->
+  <div class="section" id="s10">
+    <div class="section-header">
+      <span class="section-num">10</span>
+      <h2>Literals &amp; Constants</h2>
+    </div>
+    <div class="section-body">
+      <div class="two-col">
+        <div>
+          <p><strong>Literal</strong> — a fixed value written directly in code. It does not change.</p>
+          <div class="tbl-wrap">
+            <table>
+              <tr><th>Type</th><th>Example</th></tr>
+              <tr><td>Integer</td><td><code>10</code>, <code>-3</code>, <code>0</code></td></tr>
+              <tr><td>Float</td><td><code>3.14</code>, <code>0.5</code></td></tr>
+              <tr><td>String</td><td><code>"Hi"</code>, <code>'World'</code></td></tr>
+              <tr><td>Boolean</td><td><code>True</code>, <code>False</code></td></tr>
+              <tr><td>None</td><td><code>None</code></td></tr>
+            </table>
+          </div>
+        </div>
+        <div>
+          <p><strong>Constant</strong> — a variable whose value should never change. Python has no built-in constant keyword; use <strong>ALL_CAPS</strong> by convention.</p>
+<pre>PI      = <span class="cn">3.14159</span>
+GRAVITY = <span class="cn">9.8</span>
+MAX     = <span class="cn">100</span></pre>
+          <div class="warn">ALL_CAPS is just a naming convention. Python won't prevent you from changing it — but you shouldn't!</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 11 TYPE CONVERSION -->
+  <div class="section" id="s11">
+    <div class="section-header">
+      <span class="section-num">11</span>
+      <h2>Type Conversion</h2>
+    </div>
+    <div class="section-body">
+      <div class="two-col">
+        <div class="card accent-teal">
+          <h4>Implicit (Automatic)</h4>
+          <p>Python automatically converts a smaller type to a larger one to avoid data loss.</p>
+<pre>x = <span class="cn">5</span>      <span class="cm"># int</span>
+y = <span class="cn">2.5</span>    <span class="cm"># float</span>
+z = x + y  <span class="cm"># int → float</span>
+<span class="cm"># z = 7.5, type: float</span></pre>
+        </div>
+        <div class="card accent-purple">
+          <h4>Explicit (Manual / Casting)</h4>
+          <p>You force the conversion using built-in functions.</p>
+<pre><span class="cf">int</span>(<span class="cs">"5"</span>)       <span class="co"># → 5</span>
+<span class="cf">float</span>(<span class="cn">5</span>)      <span class="co"># → 5.0</span>
+<span class="cf">str</span>(<span class="cn">100</span>)      <span class="co"># → "100"</span>
+<span class="cf">bool</span>(<span class="cn">0</span>)       <span class="co"># → False</span>
+<span class="cf">bool</span>(<span class="cn">1</span>)       <span class="co"># → True</span></pre>
+        </div>
+      </div>
+      <div class="tbl-wrap" style="margin-top:12px">
+        <table>
+          <tr><th>Function</th><th>Converts to</th><th>Example</th><th>Result</th></tr>
+          <tr><td><code>int()</code></td><td>Integer</td><td><code>int("42")</code></td><td>42</td></tr>
+          <tr><td><code>float()</code></td><td>Float</td><td><code>float(5)</code></td><td>5.0</td></tr>
+          <tr><td><code>str()</code></td><td>String</td><td><code>str(99)</code></td><td>"99"</td></tr>
+          <tr><td><code>bool()</code></td><td>Boolean</td><td><code>bool(0)</code></td><td>False</td></tr>
+          <tr><td><code>complex()</code></td><td>Complex</td><td><code>complex(3)</code></td><td>3+0j</td></tr>
+        </table>
+      </div>
+      <div class="warn"><code>int("3.5")</code> → Error! Convert via float first: <code>int(float("3.5"))</code> → 3</div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <span>Python Revision Notes &nbsp;·&nbsp; 11 Topics</span>
+  <span>Python 3.x</span>
+</footer>
+
+</body>
+</html>

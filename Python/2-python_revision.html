@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python Revision — Operators & Expressions</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f14;
+    --surface: #141720;
+    --border: #1f2433;
+    --accent: #f5c542;
+    --accent2: #5ee7c8;
+    --accent3: #ff6b6b;
+    --text: #e4e8f0;
+    --muted: #7a8099;
+    --code-bg: #0a0c10;
+    --code-border: #1e2435;
+    --tag-bg: #1a2035;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(245,197,66,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(245,197,66,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page-wrap {
+    position: relative;
+    z-index: 1;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+
+  /* ── Header ── */
+  header {
+    margin-bottom: 60px;
+    animation: fadeDown 0.6s ease both;
+  }
+
+  .header-tag {
+    display: inline-block;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 4px 10px;
+    border-radius: 2px;
+    margin-bottom: 16px;
+  }
+
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(2rem, 6vw, 3.8rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: #fff;
+  }
+
+  h1 span { color: var(--accent); }
+
+  .subtitle {
+    margin-top: 12px;
+    color: var(--muted);
+    font-size: 1rem;
+    font-family: 'Space Mono', monospace;
+  }
+
+  /* ── Nav tabs ── */
+  .nav {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 48px;
+    animation: fadeDown 0.7s ease 0.1s both;
+  }
+
+  .nav-btn {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 8px 18px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    border-radius: 3px;
+    transition: all 0.2s;
+  }
+
+  .nav-btn:hover, .nav-btn.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(245,197,66,0.06);
+  }
+
+  /* ── Sections ── */
+  .section {
+    display: none;
+    animation: fadeIn 0.4s ease both;
+  }
+  .section.active { display: block; }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 28px;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+
+  .card:hover {
+    border-color: rgba(245,197,66,0.3);
+    transform: translateY(-2px);
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 100%;
+    background: var(--accent);
+    border-radius: 8px 0 0 8px;
+  }
+
+  .card.teal::before { background: var(--accent2); }
+  .card.red::before  { background: var(--accent3); }
+
+  .card-title {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .badge {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 2px;
+    background: var(--tag-bg);
+    color: var(--accent);
+    border: 1px solid rgba(245,197,66,0.25);
+  }
+
+  .badge.teal {
+    color: var(--accent2);
+    border-color: rgba(94,231,200,0.25);
+  }
+
+  .card p, .card li {
+    color: #b0b8cc;
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+
+  .card ul {
+    padding-left: 20px;
+    margin-top: 8px;
+  }
+
+  .card li { margin-bottom: 6px; }
+
+  /* ── Operator grid ── */
+  .op-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+    margin-top: 12px;
+  }
+
+  .op-item {
+    background: var(--code-bg);
+    border: 1px solid var(--code-border);
+    border-radius: 6px;
+    padding: 14px 16px;
+    transition: border-color 0.2s;
+  }
+
+  .op-item:hover { border-color: var(--accent2); }
+
+  .op-symbol {
+    font-family: 'Space Mono', monospace;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--accent);
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .op-name {
+    font-size: 0.78rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .op-example {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.82rem;
+    color: var(--accent2);
+  }
+
+  /* ── Code block ── */
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--code-border);
+    border-radius: 6px;
+    padding: 18px;
+    margin-top: 14px;
+    overflow-x: auto;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.82rem;
+    line-height: 1.7;
+    color: #aac9e8;
+  }
+
+  .kw { color: #c792ea; }
+  .cm { color: #546e7a; font-style: italic; }
+  .num { color: var(--accent); }
+  .op { color: var(--accent3); }
+  .out { color: var(--accent2); }
+
+  /* ── Precedence table ── */
+  .prec-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 14px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.82rem;
+  }
+
+  .prec-table th {
+    background: var(--tag-bg);
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.72rem;
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .prec-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--code-border);
+    color: #b0b8cc;
+  }
+
+  .prec-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+  .rank {
+    display: inline-block;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #000;
+    font-weight: 700;
+    font-size: 0.72rem;
+    text-align: center;
+    line-height: 22px;
+  }
+
+  .rank.low { background: var(--muted); }
+
+  /* ── Assignment grid ── */
+  .assign-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+    margin-top: 12px;
+  }
+
+  .assign-item {
+    background: var(--code-bg);
+    border: 1px solid var(--code-border);
+    border-radius: 6px;
+    padding: 14px 16px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .assign-sym {
+    font-family: 'Space Mono', monospace;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--accent3);
+    min-width: 36px;
+  }
+
+  .assign-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.5; }
+  .assign-ex   { font-family: 'Space Mono', monospace; font-size: 0.78rem; color: var(--accent2); margin-top: 4px; }
+
+  /* ── Quiz ── */
+  .quiz-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 16px;
+    transition: border-color 0.2s;
+  }
+
+  .quiz-q {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.9rem;
+    color: #fff;
+    margin-bottom: 14px;
+    line-height: 1.6;
+  }
+
+  .quiz-options {
+    display: grid;
+    gap: 8px;
+  }
+
+  .quiz-opt {
+    background: var(--code-bg);
+    border: 1px solid var(--code-border);
+    border-radius: 5px;
+    padding: 10px 16px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.82rem;
+    color: var(--muted);
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.15s;
+  }
+
+  .quiz-opt:hover  { border-color: var(--accent); color: var(--text); }
+  .quiz-opt.correct { border-color: var(--accent2); color: var(--accent2); background: rgba(94,231,200,0.06); }
+  .quiz-opt.wrong   { border-color: var(--accent3); color: var(--accent3); background: rgba(255,107,107,0.06); }
+
+  .quiz-feedback {
+    margin-top: 10px;
+    font-size: 0.82rem;
+    font-family: 'Space Mono', monospace;
+    display: none;
+  }
+
+  .score-bar {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .score-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .score-label { font-size: 0.85rem; color: var(--muted); }
+
+  /* ── Cheatsheet ── */
+  .cheat-section {
+    margin-bottom: 24px;
+  }
+
+  .cheat-heading {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 8px;
+    margin-bottom: 14px;
+  }
+
+  .cheat-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 10px;
+    align-items: flex-start;
+  }
+
+  .cheat-key {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.82rem;
+    color: var(--accent3);
+    min-width: 110px;
+  }
+
+  .cheat-val { font-size: 0.85rem; color: #b0b8cc; line-height: 1.5; }
+
+  /* ── Animations ── */
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+<div class="page-wrap">
+
+  <header>
+    <div class="header-tag">Python Revision</div>
+    <h1>Operators &amp;<br><span>Expressions</span></h1>
+    <p class="subtitle">// Topics: arithmetic · expressions · assignment operators</p>
+  </header>
+
+  <nav class="nav">
+    <button class="nav-btn active" onclick="show('arithmetic',this)">Arithmetic Ops</button>
+    <button class="nav-btn"        onclick="show('expressions',this)">Expressions</button>
+    <button class="nav-btn"        onclick="show('assignment',this)">Assignment Ops</button>
+    <button class="nav-btn"        onclick="show('quiz',this)">Quick Quiz</button>
+    <button class="nav-btn"        onclick="show('cheatsheet',this)">Cheat Sheet</button>
+  </nav>
+
+  <!-- ── 1. ARITHMETIC ── -->
+  <div id="arithmetic" class="section active">
+
+    <div class="card">
+      <div class="card-title">What are Operators? <span class="badge">Basics</span></div>
+      <p>Operators are symbols used to perform operations on values/variables. Arithmetic operators handle math operations like addition, subtraction, multiplication, etc. Python has <strong style="color:#fff">7 arithmetic operators</strong>.</p>
+    </div>
+
+    <div class="card teal">
+      <div class="card-title">The 7 Arithmetic Operators</div>
+      <div class="op-grid">
+        <div class="op-item">
+          <span class="op-symbol">+</span>
+          <span class="op-name">Addition</span>
+          <span class="op-example">15 + 4 = 19</span>
+        </div>
+        <div class="op-item">
+          <span class="op-symbol">−</span>
+          <span class="op-name">Subtraction</span>
+          <span class="op-example">15 - 4 = 11</span>
+        </div>
+        <div class="op-item">
+          <span class="op-symbol">*</span>
+          <span class="op-name">Multiplication</span>
+          <span class="op-example">15 * 4 = 60</span>
+        </div>
+        <div class="op-item">
+          <span class="op-symbol">/</span>
+          <span class="op-name">Division</span>
+          <span class="op-example">15 / 4 = 3.75</span>
+        </div>
+        <div class="op-item">
+          <span class="op-symbol">**</span>
+          <span class="op-name">Power/Exponent</span>
+          <span class="op-example">15 ** 4 = 50625</span>
+        </div>
+        <div class="op-item">
+          <span class="op-symbol">//</span>
+          <span class="op-name">Floor Division</span>
+          <span class="op-example">15 // 4 = 3</span>
+        </div>
+        <div class="op-item">
+          <span class="op-symbol">%</span>
+          <span class="op-name">Modulo</span>
+          <span class="op-example">15 % 4 = 3</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Division vs Floor Division vs Modulo</div>
+      <p>These three are often confused. Here's the key difference:</p>
+      <ul>
+        <li><strong style="color:#fff">/</strong> → Returns the full decimal result: <code style="color:var(--accent2)">15 / 4 = 3.75</code></li>
+        <li><strong style="color:#fff">//</strong> → Discards the decimal part, returns only the integer quotient: <code style="color:var(--accent2)">15 // 4 = 3</code></li>
+        <li><strong style="color:#fff">%</strong> → Returns the remainder only: <code style="color:var(--accent2)">15 % 4 = 3</code>, &nbsp;<code style="color:var(--accent2)">10 % 3 = 1</code></li>
+      </ul>
+      <pre>a <op>=</op> <num>15</num>
+b <op>=</op> <num>4</num>
+<kw>print</kw>(a <op>/</op>  b)  <cm># 3.75  — real division</cm>
+<kw>print</kw>(a <op>//</op> b)  <cm># 3     — floor division (drop decimal)</cm>
+<kw>print</kw>(a <op>%</op>  b)  <cm># 3     — modulo (remainder)</cm>
+<kw>print</kw>(a <op>**</op> b)  <cm># 50625 — 15 to the power 4</cm></pre>
+    </div>
+
+  </div>
+
+  <!-- ── 2. EXPRESSIONS ── -->
+  <div id="expressions" class="section">
+
+    <div class="card">
+      <div class="card-title">What is an Expression? <span class="badge">Concept</span></div>
+      <p>An <strong style="color:#fff">expression</strong> is any instruction written using operators and operands. In <code style="color:var(--accent2)">c = a + b</code>, the variables <em>c, a, b</em> are operands and <em>=, +</em> are operators.</p>
+    </div>
+
+    <div class="card teal">
+      <div class="card-title">Operator Precedence <span class="badge teal">PEMDAS / BODMAS</span></div>
+      <p>When multiple operators appear, Python evaluates them in a fixed order (highest → lowest):</p>
+      <table class="prec-table">
+        <thead>
+          <tr><th>#</th><th>Operator</th><th>Symbol</th><th>Associativity</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="rank">1</span></td><td>Parentheses</td><td style="color:var(--accent2);font-family:monospace">( )</td><td>Inner first</td></tr>
+          <tr><td><span class="rank">2</span></td><td>Exponent</td><td style="color:var(--accent2);font-family:monospace">**</td><td>Right → Left</td></tr>
+          <tr><td><span class="rank">3</span></td><td>Multiplication / Division / Modulo</td><td style="color:var(--accent2);font-family:monospace">* / // %</td><td>Left → Right</td></tr>
+          <tr><td><span class="rank">4</span></td><td>Addition / Subtraction</td><td style="color:var(--accent2);font-family:monospace">+ -</td><td>Left → Right</td></tr>
+          <tr><td><span class="rank">5</span></td><td>Comparison</td><td style="color:var(--accent2);font-family:monospace">== != &lt; &gt;</td><td>Left → Right</td></tr>
+          <tr><td><span class="rank low">6</span></td><td>Logical</td><td style="color:var(--accent2);font-family:monospace">and or not</td><td>Left → Right</td></tr>
+          <tr><td><span class="rank low">7</span></td><td>Assignment</td><td style="color:var(--accent2);font-family:monospace">= += -=</td><td>Right → Left</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Precedence Examples</div>
+<pre>d <op>=</op> <num>2</num> <op>+</op> <num>3</num> <op>*</op> <num>5</num>      <cm># * first → 2+15 = 17</cm>
+d <op>=</op> (<num>2</num><op>+</op><num>3</num>) <op>*</op> <num>5</num>    <cm># () first → 5*5 = 25</cm>
+d <op>=</op> <num>2</num><op>*</op><num>3</num> <op>+</op> <num>8</num><op>/</op><num>2</num>   <cm># * and / first → 6+4 = 10</cm>
+d <op>=</op> <num>2</num><op>**</op><num>3</num><op>**</op><num>2</num>       <cm># ** is right-to-left → 2**(3**2) = 2**9 = 512</cm>
+d <op>=</op> <num>3</num><op>*</op><num>4</num><op>*</op><num>5</num><op>/</op><num>4</num>    <cm># same precedence → left to right</cm>
+<out>D = 5+2*8-4/2  →  5+16-2 = 19</out></pre>
+    </div>
+
+    <div class="card red">
+      <div class="card-title">Real-World Expressions</div>
+      <p>Formulas translated into Python expressions:</p>
+      <pre><cm># Area of Square</cm>
+area <op>=</op> l <op>*</op> b
+
+<cm># Area of Triangle = ½ × base × height</cm>
+area <op>=</op> (<num>1</num><op>/</op><num>2</num>) <op>*</op> b <op>*</op> h
+
+<cm># Area of Trapezium = (a+b)/2 × h</cm>
+area <op>=</op> (a<op>+</op>b) <op>/</op> <num>2</num> <op>*</op> h
+
+<cm># Displacement formula: s = (v²−u²) / 2a</cm>
+s <op>=</op> (v<op>**</op><num>2</num> <op>-</op> u<op>**</op><num>2</num>) <op>/</op> (<num>2</num><op>*</op>a)</pre>
+    </div>
+
+  </div>
+
+  <!-- ── 3. ASSIGNMENT ── -->
+  <div id="assignment" class="section">
+
+    <div class="card">
+      <div class="card-title">Compound Assignment Operators <span class="badge">Shorthand</span></div>
+      <p>Arithmetic operators combined with <code style="color:var(--accent2)">=</code> create shorthand statements. Instead of writing <code style="color:var(--accent2)">a = a + 1</code>, write <code style="color:var(--accent2)">a += 1</code>. Commonly used for <strong style="color:#fff">counting</strong>.</p>
+    </div>
+
+    <div class="card teal">
+      <div class="card-title">All Compound Operators</div>
+      <div class="assign-grid">
+        <div class="assign-item">
+          <span class="assign-sym">+=</span>
+          <div>
+            <div class="assign-desc">Add &amp; assign</div>
+            <div class="assign-ex">a=5; a+=1 → a=6</div>
+          </div>
+        </div>
+        <div class="assign-item">
+          <span class="assign-sym">-=</span>
+          <div>
+            <div class="assign-desc">Subtract &amp; assign</div>
+            <div class="assign-ex">n=10; n-=1 → n=9</div>
+          </div>
+        </div>
+        <div class="assign-item">
+          <span class="assign-sym">*=</span>
+          <div>
+            <div class="assign-desc">Multiply &amp; assign</div>
+            <div class="assign-ex">p=10; p*=5 → p=50</div>
+          </div>
+        </div>
+        <div class="assign-item">
+          <span class="assign-sym">/=</span>
+          <div>
+            <div class="assign-desc">Divide &amp; assign</div>
+            <div class="assign-ex">x=20; x/=4 → x=5.0</div>
+          </div>
+        </div>
+        <div class="assign-item">
+          <span class="assign-sym">//=</span>
+          <div>
+            <div class="assign-desc">Floor div &amp; assign</div>
+            <div class="assign-ex">x=20; x//=3 → x=6</div>
+          </div>
+        </div>
+        <div class="assign-item">
+          <span class="assign-sym">%=</span>
+          <div>
+            <div class="assign-desc">Modulo &amp; assign</div>
+            <div class="assign-ex">x=10; x%=3 → x=1</div>
+          </div>
+        </div>
+        <div class="assign-item">
+          <span class="assign-sym">**=</span>
+          <div>
+            <div class="assign-desc">Power &amp; assign</div>
+            <div class="assign-ex">x=2; x**=3 → x=8</div>
+          </div>
+        </div>
+        <div class="assign-item">
+          <span class="assign-sym">&amp;=</span>
+          <div>
+            <div class="assign-desc">Bitwise AND &amp; assign</div>
+            <div class="assign-ex">a=10; a&amp;=14 → a=10</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Counting Example (Most Common Use)</div>
+<pre><cm># Long form (counting)</cm>
+count <op>=</op> <num>0</num>
+count <op>=</op> count <op>+</op> <num>1</num>   <cm># becomes 1</cm>
+count <op>=</op> count <op>+</op> <num>1</num>   <cm># becomes 2</cm>
+
+<cm># Short form using +=</cm>
+count <op>=</op> <num>0</num>
+count <op>+=</op> <num>1</num>          <cm># 1</cm>
+count <op>+=</op> <num>1</num>          <cm># 2</cm>
+count <op>+=</op> <num>1</num>          <cm># 3</cm>
+
+<out>>>> count</out>
+<out>3</out></pre>
+    </div>
+
+  </div>
+
+  <!-- ── 4. QUIZ ── -->
+  <div id="quiz" class="section">
+
+    <div class="score-bar">
+      <div>
+        <div class="score-num" id="scoreNum">0 / 0</div>
+        <div class="score-label">Score</div>
+      </div>
+      <div style="flex:1; background:var(--code-bg); border-radius:4px; height:8px; overflow:hidden;">
+        <div id="scoreBar" style="height:100%;width:0%;background:var(--accent);transition:width 0.4s;border-radius:4px;"></div>
+      </div>
+      <button class="nav-btn" onclick="resetQuiz()" style="margin:0">Reset</button>
+    </div>
+
+    <div class="quiz-card" id="q1">
+      <div class="quiz-q">Q1. What does <code>15 % 4</code> evaluate to?</div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="answer(this,'q1',false)">A) 3.75</button>
+        <button class="quiz-opt" onclick="answer(this,'q1',true)">B) 3</button>
+        <button class="quiz-opt" onclick="answer(this,'q1',false)">C) 0</button>
+        <button class="quiz-opt" onclick="answer(this,'q1',false)">D) 4</button>
+      </div>
+      <div class="quiz-feedback" id="q1-fb" style="color:var(--accent2)">✓ Correct! 15 ÷ 4 = 3 remainder 3. Modulo returns the remainder.</div>
+    </div>
+
+    <div class="quiz-card" id="q2">
+      <div class="quiz-q">Q2. What is the result of <code>2 + 3 * 5</code>?</div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="answer(this,'q2',false)">A) 25</button>
+        <button class="quiz-opt" onclick="answer(this,'q2',true)">B) 17</button>
+        <button class="quiz-opt" onclick="answer(this,'q2',false)">C) 10</button>
+        <button class="quiz-opt" onclick="answer(this,'q2',false)">D) 30</button>
+      </div>
+      <div class="quiz-feedback" id="q2-fb" style="color:var(--accent2)">✓ Correct! * has higher precedence than +, so 3*5=15 first, then 2+15=17.</div>
+    </div>
+
+    <div class="quiz-card" id="q3">
+      <div class="quiz-q">Q3. What does <code>15 // 4</code> return?</div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="answer(this,'q3',false)">A) 3.75</button>
+        <button class="quiz-opt" onclick="answer(this,'q3',false)">B) 3.0</button>
+        <button class="quiz-opt" onclick="answer(this,'q3',true)">C) 3</button>
+        <button class="quiz-opt" onclick="answer(this,'q3',false)">D) 4</button>
+      </div>
+      <div class="quiz-feedback" id="q3-fb" style="color:var(--accent2)">✓ Correct! Floor division discards the fractional part and returns an integer.</div>
+    </div>
+
+    <div class="quiz-card" id="q4">
+      <div class="quiz-q">Q4. <code>a = 5; a += 3</code> — what is the value of <code>a</code>?</div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="answer(this,'q4',false)">A) 5</button>
+        <button class="quiz-opt" onclick="answer(this,'q4',true)">B) 8</button>
+        <button class="quiz-opt" onclick="answer(this,'q4',false)">C) 3</button>
+        <button class="quiz-opt" onclick="answer(this,'q4',false)">D) 15</button>
+      </div>
+      <div class="quiz-feedback" id="q4-fb" style="color:var(--accent2)">✓ Correct! a += 3 is shorthand for a = a + 3 → 5 + 3 = 8.</div>
+    </div>
+
+    <div class="quiz-card" id="q5">
+      <div class="quiz-q">Q5. What is the result of <code>2 ** 3 ** 2</code> in Python?</div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="answer(this,'q5',false)">A) 64</button>
+        <button class="quiz-opt" onclick="answer(this,'q5',true)">B) 512</button>
+        <button class="quiz-opt" onclick="answer(this,'q5',false)">C) 8</button>
+        <button class="quiz-opt" onclick="answer(this,'q5',false)">D) 36</button>
+      </div>
+      <div class="quiz-feedback" id="q5-fb" style="color:var(--accent2)">✓ Correct! ** is right-associative: 3**2=9 first, then 2**9=512.</div>
+    </div>
+
+    <div class="quiz-card" id="q6">
+      <div class="quiz-q">Q6. Which operator has the HIGHEST precedence?</div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="answer(this,'q6',false)">A) **</button>
+        <button class="quiz-opt" onclick="answer(this,'q6',true)">B) ( )</button>
+        <button class="quiz-opt" onclick="answer(this,'q6',false)">C) *</button>
+        <button class="quiz-opt" onclick="answer(this,'q6',false)">D) +</button>
+      </div>
+      <div class="quiz-feedback" id="q6-fb" style="color:var(--accent2)">✓ Correct! Parentheses always have the highest precedence in Python.</div>
+    </div>
+
+  </div>
+
+  <!-- ── 5. CHEATSHEET ── -->
+  <div id="cheatsheet" class="section">
+
+    <div class="card">
+      <div class="cheat-section">
+        <div class="cheat-heading">Arithmetic Operators</div>
+        <div class="cheat-row"><span class="cheat-key">a + b</span><span class="cheat-val">Addition — sums two values</span></div>
+        <div class="cheat-row"><span class="cheat-key">a - b</span><span class="cheat-val">Subtraction — difference of two values</span></div>
+        <div class="cheat-row"><span class="cheat-key">a * b</span><span class="cheat-val">Multiplication — product</span></div>
+        <div class="cheat-row"><span class="cheat-key">a / b</span><span class="cheat-val">Division — returns float result</span></div>
+        <div class="cheat-row"><span class="cheat-key">a // b</span><span class="cheat-val">Floor division — drops decimal part</span></div>
+        <div class="cheat-row"><span class="cheat-key">a % b</span><span class="cheat-val">Modulo — remainder after division</span></div>
+        <div class="cheat-row"><span class="cheat-key">a ** b</span><span class="cheat-val">Power — a raised to b</span></div>
+      </div>
+
+      <div class="cheat-section">
+        <div class="cheat-heading">Precedence (High → Low)</div>
+        <div class="cheat-row"><span class="cheat-key">( )</span><span class="cheat-val">Parentheses — always first</span></div>
+        <div class="cheat-row"><span class="cheat-key">**</span><span class="cheat-val">Exponent — right to left</span></div>
+        <div class="cheat-row"><span class="cheat-key">* / // %</span><span class="cheat-val">Mul / Div — same level, left to right</span></div>
+        <div class="cheat-row"><span class="cheat-key">+ −</span><span class="cheat-val">Add / Sub — left to right</span></div>
+        <div class="cheat-row"><span class="cheat-key">== != &lt; &gt;</span><span class="cheat-val">Comparison operators</span></div>
+        <div class="cheat-row"><span class="cheat-key">and or not</span><span class="cheat-val">Logical operators</span></div>
+        <div class="cheat-row"><span class="cheat-key">= += -=</span><span class="cheat-val">Assignment — lowest</span></div>
+      </div>
+
+      <div class="cheat-section">
+        <div class="cheat-heading">Compound Assignment</div>
+        <div class="cheat-row"><span class="cheat-key">a += n</span><span class="cheat-val">Same as a = a + n</span></div>
+        <div class="cheat-row"><span class="cheat-key">a -= n</span><span class="cheat-val">Same as a = a - n</span></div>
+        <div class="cheat-row"><span class="cheat-key">a *= n</span><span class="cheat-val">Same as a = a * n</span></div>
+        <div class="cheat-row"><span class="cheat-key">a /= n</span><span class="cheat-val">Same as a = a / n</span></div>
+        <div class="cheat-row"><span class="cheat-key">a //= n</span><span class="cheat-val">Same as a = a // n</span></div>
+        <div class="cheat-row"><span class="cheat-key">a %= n</span><span class="cheat-val">Same as a = a % n</span></div>
+        <div class="cheat-row"><span class="cheat-key">a **= n</span><span class="cheat-val">Same as a = a ** n</span></div>
+      </div>
+
+      <div class="cheat-section">
+        <div class="cheat-heading">Key Formulas in Python</div>
+        <div class="cheat-row"><span class="cheat-key">Area Square</span><span class="cheat-val" style="font-family:monospace;font-size:0.8rem;color:var(--accent2)">l * b</span></div>
+        <div class="cheat-row"><span class="cheat-key">Area Triangle</span><span class="cheat-val" style="font-family:monospace;font-size:0.8rem;color:var(--accent2)">(1/2) * b * h</span></div>
+        <div class="cheat-row"><span class="cheat-key">Area Trapezium</span><span class="cheat-val" style="font-family:monospace;font-size:0.8rem;color:var(--accent2)">(a+b) / 2 * h</span></div>
+        <div class="cheat-row"><span class="cheat-key">Displacement</span><span class="cheat-val" style="font-family:monospace;font-size:0.8rem;color:var(--accent2)">(v**2 - u**2) / (2*a)</span></div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  let correct = 0, total = 0, answered = {};
+
+  function show(id, btn) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  function answer(btn, qid, isCorrect) {
+    if (answered[qid]) return;
+    answered[qid] = true;
+    total++;
+
+    const opts = btn.closest('.quiz-options').querySelectorAll('.quiz-opt');
+    opts.forEach(o => o.disabled = true);
+
+    if (isCorrect) {
+      btn.classList.add('correct');
+      correct++;
+      document.getElementById(qid + '-fb').style.display = 'block';
+    } else {
+      btn.classList.add('wrong');
+      // find correct
+      opts.forEach(o => {
+        if (o.getAttribute('onclick').includes('true')) o.classList.add('correct');
+      });
+      const fb = document.getElementById(qid + '-fb');
+      fb.style.display = 'block';
+      fb.style.color = 'var(--accent3)';
+      fb.textContent = '✗ Not quite — the highlighted option is correct. Check the notes!';
+    }
+
+    document.getElementById('scoreNum').textContent = correct + ' / ' + total;
+    document.getElementById('scoreBar').style.width = (correct / 6 * 100) + '%';
+  }
+
+  function resetQuiz() {
+    correct = 0; total = 0; answered = {};
+    document.getElementById('scoreNum').textContent = '0 / 0';
+    document.getElementById('scoreBar').style.width = '0%';
+    document.querySelectorAll('.quiz-opt').forEach(b => {
+      b.classList.remove('correct','wrong');
+      b.disabled = false;
+    });
+    document.querySelectorAll('.quiz-feedback').forEach(f => f.style.display = 'none');
+  }
+</script>
+</body>
+</html>
