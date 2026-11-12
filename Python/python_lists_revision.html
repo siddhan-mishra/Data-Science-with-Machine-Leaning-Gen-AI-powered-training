@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Python Lists — Revision Notes</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #0d0f14;
+      --surface: #141720;
+      --surface2: #1c2030;
+      --border: #2a2f42;
+      --accent: #5cefb0;
+      --accent2: #ff6b6b;
+      --accent3: #f7c948;
+      --accent4: #7eb3ff;
+      --text: #e8eaf0;
+      --muted: #7a80a0;
+      --code-bg: #0a0c10;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Syne', sans-serif;
+      min-height: 100vh;
+      padding: 2rem 1rem 4rem;
+    }
+
+    /* Background grid */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 40px 40px;
+      opacity: 0.25;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Header */
+    header {
+      border-left: 4px solid var(--accent);
+      padding: 0.5rem 0 0.5rem 1.5rem;
+      margin-bottom: 2.5rem;
+      animation: fadeDown 0.6s ease both;
+    }
+    header .tag {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 0.4rem;
+    }
+    header h1 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1.1;
+    }
+    header p {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-top: 0.5rem;
+    }
+
+    /* Section cards */
+    .section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+      animation: fadeUp 0.5s ease both;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.9rem 1.25rem;
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+    }
+    .section-header .num {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--muted);
+    }
+    .section-header h2 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+    .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .dot-green  { background: var(--accent); }
+    .dot-red    { background: var(--accent2); }
+    .dot-yellow { background: var(--accent3); }
+    .dot-blue   { background: var(--accent4); }
+
+    .section-body { padding: 1.25rem; }
+
+    /* Pills / badges */
+    .pill {
+      display: inline-block;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 4px;
+      border: 1px solid;
+      margin: 0.2rem 0.15rem 0.2rem 0;
+    }
+    .pill-green  { color: var(--accent);  border-color: var(--accent);  background: rgba(92,239,176,0.07); }
+    .pill-red    { color: var(--accent2); border-color: var(--accent2); background: rgba(255,107,107,0.07); }
+    .pill-yellow { color: var(--accent3); border-color: var(--accent3); background: rgba(247,201,72,0.07);  }
+    .pill-blue   { color: var(--accent4); border-color: var(--accent4); background: rgba(126,179,255,0.07); }
+
+    /* Key–value rows */
+    .kv-row {
+      display: flex;
+      gap: 0.75rem;
+      padding: 0.55rem 0;
+      border-bottom: 1px solid var(--border);
+      align-items: flex-start;
+    }
+    .kv-row:last-child { border-bottom: none; }
+    .kv-key {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--accent);
+      min-width: 120px;
+      padding-top: 0.05rem;
+      flex-shrink: 0;
+    }
+    .kv-val {
+      font-size: 0.85rem;
+      color: var(--text);
+      line-height: 1.5;
+    }
+    .kv-val em { color: var(--muted); font-style: normal; font-size: 0.8rem; }
+
+    /* Code block */
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.85rem 1rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.78rem;
+      color: #c9d1e0;
+      overflow-x: auto;
+      margin-top: 0.75rem;
+      line-height: 1.7;
+    }
+    pre .kw  { color: var(--accent4); }
+    pre .fn  { color: var(--accent); }
+    pre .st  { color: var(--accent3); }
+    pre .cm  { color: var(--muted); }
+    pre .num { color: var(--accent2); }
+
+    /* Method grid */
+    .method-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 0.75rem;
+      margin-top: 0.25rem;
+    }
+    .method-card {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.75rem 0.9rem;
+    }
+    .method-card .m-name {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--accent);
+      margin-bottom: 0.3rem;
+    }
+    .method-card .m-desc {
+      font-size: 0.78rem;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    /* Highlight box */
+    .highlight-box {
+      border-left: 3px solid var(--accent3);
+      background: rgba(247,201,72,0.06);
+      border-radius: 0 6px 6px 0;
+      padding: 0.75rem 1rem;
+      margin-top: 0.75rem;
+      font-size: 0.84rem;
+      line-height: 1.6;
+    }
+    .highlight-box strong { color: var(--accent3); }
+
+    /* Two-col */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    @media (max-width: 520px) { .two-col { grid-template-columns: 1fr; } }
+
+    /* Index diagram */
+    .index-diagram {
+      display: flex;
+      gap: 0;
+      margin-top: 0.75rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
+      overflow-x: auto;
+    }
+    .idx-cell {
+      flex: 1; min-width: 44px;
+      text-align: center;
+    }
+    .idx-top  { color: var(--accent4);  padding: 0.2rem 0 0.1rem; border-top: 1px solid var(--accent4);  border-left: 1px solid var(--accent4); }
+    .idx-cell:last-child .idx-top { border-right: 1px solid var(--accent4); }
+    .idx-val  { background: var(--code-bg); padding: 0.35rem 0; border: 1px solid var(--border); border-left: none; font-size: 0.78rem; }
+    .idx-cell:first-child .idx-val { border-left: 1px solid var(--border); }
+    .idx-bot  { color: var(--accent2); padding: 0.1rem 0 0.2rem; border-bottom: 1px solid var(--accent2); border-left: 1px solid var(--accent2); }
+    .idx-cell:last-child .idx-bot { border-right: 1px solid var(--accent2); }
+
+    /* animations */
+    @keyframes fadeDown { from { opacity: 0; transform: translateY(-16px); } to { opacity: 1; transform: none; } }
+    @keyframes fadeUp   { from { opacity: 0; transform: translateY(14px);  } to { opacity: 1; transform: none; } }
+
+    .section:nth-child(1) { animation-delay: 0.05s; }
+    .section:nth-child(2) { animation-delay: 0.10s; }
+    .section:nth-child(3) { animation-delay: 0.15s; }
+    .section:nth-child(4) { animation-delay: 0.20s; }
+    .section:nth-child(5) { animation-delay: 0.25s; }
+    .section:nth-child(6) { animation-delay: 0.30s; }
+    .section:nth-child(7) { animation-delay: 0.35s; }
+    .section:nth-child(8) { animation-delay: 0.40s; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="tag">📋 Revision Notes · Python</div>
+    <h1>Introduction to Lists</h1>
+    <p>Core concepts, methods &amp; operations — quick reference</p>
+  </header>
+
+  <!-- 1. What is a List? -->
+  <div class="section">
+    <div class="section-header">
+      <span class="dot dot-green"></span>
+      <span class="num">01</span>
+      <h2>What is a List?</h2>
+    </div>
+    <div class="section-body">
+      <div class="kv-row"><span class="kv-key">Ordered</span><span class="kv-val">Items maintain insertion order ✓</span></div>
+      <div class="kv-row"><span class="kv-key">Duplicates</span><span class="kv-val">Allowed ✓</span></div>
+      <div class="kv-row"><span class="kv-key">Mutable</span><span class="kv-val">Can be changed after creation ✓</span></div>
+      <div class="kv-row"><span class="kv-key">Heterogeneous</span><span class="kv-val">Can hold mixed data types ✓</span></div>
+      <div class="kv-row"><span class="kv-key">Syntax</span><span class="kv-val"><span class="pill pill-green">[ ]</span> items separated by commas</span></div>
+      <pre><span class="cm"># Two ways to create a list</span>
+List1 = [<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">4</span>, <span class="num">5</span>]
+List2 = <span class="fn">list</span>((<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">4</span>, <span class="num">5</span>))
+
+<span class="cm"># Heterogeneous list</span>
+Mylist = [<span class="st">'John'</span>, <span class="num">15</span>, <span class="num">14.6</span>, <span class="kw">True</span>, <span class="st">'Steven'</span>, <span class="num">5+7j</span>]</pre>
+    </div>
+  </div>
+
+  <!-- 2. Indexing -->
+  <div class="section">
+    <div class="section-header">
+      <span class="dot dot-blue"></span>
+      <span class="num">02</span>
+      <h2>Indexing &amp; Slicing</h2>
+    </div>
+    <div class="section-body">
+      <p style="font-size:0.82rem; color:var(--muted); margin-bottom:0.75rem;">Lists have both <strong style="color:var(--accent4)">positive</strong> and <strong style="color:var(--accent2)">negative</strong> indices.</p>
+      <div class="index-diagram">
+        <div class="idx-cell"><div class="idx-top">0</div><div class="idx-val">'a'</div><div class="idx-bot">-5</div></div>
+        <div class="idx-cell"><div class="idx-top">1</div><div class="idx-val">'b'</div><div class="idx-bot">-4</div></div>
+        <div class="idx-cell"><div class="idx-top">2</div><div class="idx-val">'c'</div><div class="idx-bot">-3</div></div>
+        <div class="idx-cell"><div class="idx-top">3</div><div class="idx-val">'d'</div><div class="idx-bot">-2</div></div>
+        <div class="idx-cell"><div class="idx-top">4</div><div class="idx-val">'e'</div><div class="idx-bot">-1</div></div>
+      </div>
+      <pre><span class="cm"># Slicing: list[start : stop : step]</span>
+L = [<span class="num">10</span>, <span class="num">20</span>, <span class="num">30</span>, <span class="num">40</span>, <span class="num">50</span>]
+L[<span class="num">1</span>:<span class="num">4</span>]    <span class="cm"># → [20, 30, 40]</span>
+L[:<span class="num">3</span>]     <span class="cm"># → [10, 20, 30]</span>
+L[::<span class="num">2</span>]    <span class="cm"># → [10, 30, 50]</span>
+L[<span class="num">-1</span>]     <span class="cm"># → 50  (last element)</span></pre>
+      <div class="highlight-box"><strong>Empty slice tip:</strong> <code>L[0:0]</code> is an empty slice — refers to the space <em>before</em> index 0.</div>
+    </div>
+  </div>
+
+  <!-- 3. Adding / Removing -->
+  <div class="section">
+    <div class="section-header">
+      <span class="dot dot-yellow"></span>
+      <span class="num">03</span>
+      <h2>Modifying a List</h2>
+    </div>
+    <div class="section-body">
+      <div class="two-col">
+        <div>
+          <p style="font-size:0.78rem; color:var(--accent3); font-weight:600; margin-bottom:0.5rem;">➕ ADDING ELEMENTS</p>
+          <div class="kv-row"><span class="kv-key">append(x)</span><span class="kv-val">Add x to the end</span></div>
+          <div class="kv-row"><span class="kv-key">extend(it)</span><span class="kv-val">Add all items from iterable</span></div>
+          <div class="kv-row"><span class="kv-key">insert(i,x)</span><span class="kv-val">Insert x at index i</span></div>
+        </div>
+        <div>
+          <p style="font-size:0.78rem; color:var(--accent2); font-weight:600; margin-bottom:0.5rem;">➖ REMOVING ELEMENTS</p>
+          <div class="kv-row"><span class="kv-key">remove(x)</span><span class="kv-val">Remove first occurrence of x</span></div>
+          <div class="kv-row"><span class="kv-key">pop(i)</span><span class="kv-val">Remove &amp; return item at index i</span></div>
+          <div class="kv-row"><span class="kv-key">del L[i]</span><span class="kv-val">Delete item or slice</span></div>
+        </div>
+      </div>
+      <pre><span class="cm"># append example</span>
+Mylist = [<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>]
+Mylist.<span class="fn">append</span>(<span class="num">50</span>)   <span class="cm"># → [1, 2, 3, 50]</span>
+
+<span class="cm"># insert example</span>
+Mylist.<span class="fn">insert</span>(<span class="num">1</span>, <span class="num">99</span>) <span class="cm"># → [1, 99, 2, 3, 50]</span></pre>
+    </div>
+  </div>
+
+  <!-- 4. Operators -->
+  <div class="section">
+    <div class="section-header">
+      <span class="dot dot-red"></span>
+      <span class="num">04</span>
+      <h2>List Operations</h2>
+    </div>
+    <div class="section-body">
+      <div class="kv-row"><span class="kv-key"><span class="pill pill-green">+</span> Concatenation</span><span class="kv-val">Joins two lists into a new list <em>(originals unchanged)</em></span></div>
+      <div class="kv-row"><span class="kv-key"><span class="pill pill-yellow">*</span> Repetition</span><span class="kv-val">Repeats list n times <em>e.g. [0]*3 → [0,0,0]</em></span></div>
+      <div class="kv-row"><span class="kv-key"><span class="pill pill-blue">in / not in</span></span><span class="kv-val">Membership check — returns True / False</span></div>
+      <div class="kv-row"><span class="kv-key"><span class="pill pill-red">== != &lt; &gt;</span></span><span class="kv-val">Compare element-by-element from left to right</span></div>
+      <div class="kv-row"><span class="kv-key"><span class="pill pill-green">len()</span></span><span class="kv-val">Returns number of items in list</span></div>
+    </div>
+  </div>
+
+  <!-- 5. Traversal -->
+  <div class="section">
+    <div class="section-header">
+      <span class="dot dot-blue"></span>
+      <span class="num">05</span>
+      <h2>Traversal Methods</h2>
+    </div>
+    <div class="section-body">
+      <pre><span class="cm"># 1. Simple for loop</span>
+<span class="kw">for</span> item <span class="kw">in</span> mylist:
+    <span class="fn">print</span>(item)
+
+<span class="cm"># 2. for + enumerate()  ← Pythonic ✓</span>
+<span class="kw">for</span> i, item <span class="kw">in</span> <span class="fn">enumerate</span>(mylist):
+    <span class="fn">print</span>(i, item)
+
+<span class="cm"># 3. while loop (manual index)</span>
+i = <span class="num">0</span>
+<span class="kw">while</span> i &lt; <span class="fn">len</span>(mylist):
+    <span class="fn">print</span>(mylist[i])
+    i += <span class="num">1</span></pre>
+      <div class="highlight-box"><strong>Prefer enumerate()</strong> when you need both index and value — cleaner and more Pythonic than managing an index variable manually.</div>
+    </div>
+  </div>
+
+  <!-- 6. Useful Methods -->
+  <div class="section">
+    <div class="section-header">
+      <span class="dot dot-green"></span>
+      <span class="num">06</span>
+      <h2>Useful Built-in Methods</h2>
+    </div>
+    <div class="section-body">
+      <div class="method-grid">
+        <div class="method-card"><div class="m-name">index(x)</div><div class="m-desc">Returns the first index of value x</div></div>
+        <div class="method-card"><div class="m-name">count(x)</div><div class="m-desc">Number of times x appears</div></div>
+        <div class="method-card"><div class="m-name">sort()</div><div class="m-desc">Sorts list in-place (ascending by default)</div></div>
+        <div class="method-card"><div class="m-name">sort(reverse=True)</div><div class="m-desc">Sorts descending in-place</div></div>
+        <div class="method-card"><div class="m-name">reverse()</div><div class="m-desc">Reverses list in-place</div></div>
+        <div class="method-card"><div class="m-name">copy()</div><div class="m-desc">Returns a shallow copy of the list</div></div>
+        <div class="method-card"><div class="m-name">clear()</div><div class="m-desc">Removes all elements</div></div>
+        <div class="method-card"><div class="m-name">len(list)</div><div class="m-desc">Returns total length of the list</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. List Comprehension -->
+  <div class="section">
+    <div class="section-header">
+      <span class="dot dot-yellow"></span>
+      <span class="num">07</span>
+      <h2>List Comprehension</h2>
+    </div>
+    <div class="section-body">
+      <p style="font-size:0.84rem; color:var(--muted); margin-bottom:0.75rem;">Concise one-liner to create a new list from an existing one.</p>
+      <pre><span class="cm"># Syntax: [expression for item in iterable if condition]</span>
+
+squares   = [x**<span class="num">2</span> <span class="kw">for</span> x <span class="kw">in</span> <span class="fn">range</span>(<span class="num">5</span>)]         <span class="cm"># [0,1,4,9,16]</span>
+evens     = [x <span class="kw">for</span> x <span class="kw">in</span> L <span class="kw">if</span> x % <span class="num">2</span> == <span class="num">0</span>]     <span class="cm"># even numbers</span>
+odds      = [x <span class="kw">for</span> x <span class="kw">in</span> L <span class="kw">if</span> x % <span class="num">2</span> != <span class="num">0</span>]     <span class="cm"># odd numbers</span>
+
+<span class="cm"># Filter valid positive sales</span>
+sales = [<span class="num">100</span>, <span class="num">250</span>, <span class="num">-50</span>, <span class="num">400</span>, <span class="st">"error"</span>, <span class="num">300</span>]
+cleaned = [x <span class="kw">for</span> x <span class="kw">in</span> sales <span class="kw">if</span> <span class="fn">isinstance</span>(x, <span class="fn">int</span>) <span class="kw">and</span> x &gt; <span class="num">0</span>]</pre>
+    </div>
+  </div>
+
+  <!-- 8. Nested Lists -->
+  <div class="section">
+    <div class="section-header">
+      <span class="dot dot-red"></span>
+      <span class="num">08</span>
+      <h2>Nested Lists</h2>
+    </div>
+    <div class="section-body">
+      <p style="font-size:0.84rem; color:var(--muted); margin-bottom:0.75rem;">A list containing other lists — used to represent matrices, grids, or tables.</p>
+      <pre><span class="cm"># 2D nested list (matrix)</span>
+matrix = [
+    [<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>],
+    [<span class="num">4</span>, <span class="num">5</span>, <span class="num">6</span>],
+    [<span class="num">7</span>, <span class="num">8</span>, <span class="num">9</span>]
+]
+
+matrix[<span class="num">0</span>][<span class="num">1</span>]   <span class="cm"># → 2  (row 0, col 1)</span>
+matrix[<span class="num">2</span>][<span class="num">2</span>]   <span class="cm"># → 9  (row 2, col 2)</span>
+
+<span class="cm"># Traverse with nested loops</span>
+<span class="kw">for</span> row <span class="kw">in</span> matrix:
+    <span class="kw">for</span> val <span class="kw">in</span> row:
+        <span class="fn">print</span>(val, end=<span class="st">' '</span>)</pre>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Basics Quiz | From Fundamentals to Loops</title>
+    <style>
+        :root {
+            --primary: #306998;
+            --secondary: #FFD43B;
+            --dark: #1e3a5f;
+            --light: #f8f9fa;
+            --success: #28a745;
+            --danger: #dc3545;
+            --border: #dee2e6;
+            --card-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #e8f4f8 0%, #f0f4f8 100%);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--dark));
+            color: white;
+            padding: 40px 30px;
+            border-radius: 16px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: var(--card-shadow);
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .meta {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .meta span {
+            background: rgba(255,255,255,0.15);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        .instructions {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: var(--card-shadow);
+            border-left: 5px solid var(--secondary);
+        }
+
+        .instructions h2 {
+            color: var(--dark);
+            margin-bottom: 12px;
+            font-size: 1.3rem;
+        }
+
+        .instructions ul {
+            padding-left: 22px;
+        }
+
+        .instructions li {
+            margin-bottom: 6px;
+        }
+
+        .section-title {
+            background: var(--dark);
+            color: white;
+            padding: 14px 22px;
+            border-radius: 10px;
+            margin: 35px 0 20px;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .question-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--border);
+            transition: transform 0.2s;
+        }
+
+        .question-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .q-number {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 32px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            margin-right: 10px;
+        }
+
+        .q-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #222;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .options {
+            list-style: none;
+            padding-left: 42px;
+        }
+
+        .options li {
+            margin-bottom: 10px;
+            padding: 10px 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #eee;
+            cursor: default;
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 16px 20px;
+            border-radius: 8px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.95rem;
+            overflow-x: auto;
+            margin: 12px 0 15px 42px;
+            line-height: 1.5;
+        }
+
+        .code-block .keyword { color: #569cd6; }
+        .code-block .string { color: #ce9178; }
+        .code-block .number { color: #b5cea8; }
+        .code-block .comment { color: #6a9955; }
+
+        .btn-answer {
+            margin-top: 15px;
+            margin-left: 42px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.15s;
+        }
+
+        .btn-answer:hover {
+            background: var(--dark);
+            transform: scale(1.03);
+        }
+
+        .btn-answer.revealed {
+            background: var(--success);
+        }
+
+        .answer-box {
+            display: none;
+            margin: 15px 0 0 42px;
+            padding: 15px 18px;
+            background: #e8f5e9;
+            border-left: 4px solid var(--success);
+            border-radius: 0 8px 8px 0;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .answer-box.show {
+            display: block;
+        }
+
+        .answer-box strong {
+            color: var(--success);
+        }
+
+        .answer-box .explanation {
+            margin-top: 6px;
+            font-size: 0.95rem;
+            color: #444;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .controls {
+            text-align: center;
+            margin: 40px 0 20px;
+        }
+
+        .btn-control {
+            background: var(--secondary);
+            color: #222;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin: 0 8px;
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+
+        .btn-control:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 25px;
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .topic-tag {
+            display: inline-block;
+            font-size: 0.75rem;
+            background: #e3f2fd;
+            color: var(--primary);
+            padding: 3px 10px;
+            border-radius: 12px;
+            margin-left: 10px;
+            font-weight: 600;
+            vertical-align: middle;
+        }
+
+        @media (max-width: 600px) {
+            header h1 { font-size: 1.6rem; }
+            .q-text { font-size: 1rem; }
+            .options { padding-left: 20px; }
+            .code-block, .btn-answer, .answer-box { margin-left: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>
+                <span style="font-size:2.5rem;">🐍</span>
+                Python Basics Quiz
+            </h1>
+            <p>Test your understanding of Python fundamentals — from variables & data types to conditionals and loops</p>
+            <div class="meta">
+                <span>📝 20 Questions</span>
+                <span>⏱️ 25–30 minutes</span>
+                <span>🎯 Beginner Level</span>
+            </div>
+        </header>
+
+        <div class="instructions">
+            <h2>📋 Instructions</h2>
+            <ul>
+                <li>Read each question carefully. Some ask for the <strong>output</strong> of code, others test concepts.</li>
+                <li>Try to answer before revealing the solution.</li>
+                <li>Click <strong>"Show Answer"</strong> to check your response and read the explanation.</li>
+                <li>Topics covered: <strong>Basics → Data Types → Conditional Statements → Loops</strong></li>
+            </ul>
+        </div>
+
+        <!-- ==================== SECTION 1: PYTHON BASICS ==================== -->
+        <div class="section-title">1️⃣ Python Basics</div>
+
+        <!-- Q1 -->
+        <div class="question-card">
+            <div class="q-text">
+                <span class="q-number">1</span>
+                Which of the following is the correct file extension for a Python source file?
+                <span class="topic-tag">Basics</span>
+            </div>
+            <ul class="options">
+                <li>A) .python</li>
+                <li>B) .py</li>
+                <li>C) .pt</li>
+                <li>D) .pyt</li>
+            </ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            <div class="answer-box">
+                <strong>Answer: B) .py</strong>
+                <div class="explanation">Python source files use the <code>.py</code> extension. Example: <code>hello.py</code></div>
+            </div>
+        </div>
+
+        <!-- Q2 -->
+        <div class="question-card">
+            <div class="q-text">
+                <span class="q-number">2</span>
+                What is the output of the following code?
+                <span class="topic-tag">Basics</span>
+            </div>
+            <div class="code-block">
+print(2 ** 3)<br>
+print(10 // 3)<br>
+print(10 % 3)
+            </div>
+            <ul class="options">
+                <li>A) 8, 3.33, 1</li>
+                <li>B) 8, 3, 1</li>
+                <li>C) 6, 3, 1</li>
+                <li>D) 8, 3, 0</li>
+            </ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            <div class="answer-box">
+                <strong>Answer: B) 8, 3, 1</strong>
+                <div class="explanation">
+                    <code>**</code> is exponentiation (2³ = 8).<br>
+                    <code>//</code> is floor division (10 ÷ 3 = 3).<br>
+                    <code>%</code> is modulus / remainder (10 % 3 = 1).
+                </div>
+            </div>
+        </div>
+
+        <!-- Q3 -->
+        <div class="question-card">
+            <div class="q-text">
+                <span class="q-number">3</span>
+                Which symbol is used for single-line comments in Python?
+                <span class="topic-tag">Basics</span>
+            </div>
+            <ul class="options">
+                <li>A) //</li>
+                <li>B) /* */</li>
+                <li>C) #</li>
+                <li>D) --</li>
+            </ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            <div class="answer-box">
+                <strong>Answer: C) #</strong>
+                <div class="explanation">In Python, single-line comments start with the hash symbol <code>#</code>. Multi-line comments are usually written using triple quotes <code>""" ... """</code>.</div>
+            </div>
+        </div>
+
+        <!-- Q4 -->
+        <div class="question-card">
+            <div class="q-text">
+                <span class="q-number">4</span>
+                What will be the output of this code?
+                <span class="topic-tag">Basics</span>
+            </div>
+            <div class="code-block">
+x = 5<br>
+y = "5"<br>
+print(x + int(y))
+            </div>
+            <ul class="options">
+                <li>A) 55</li>
+                <li>B) 10</li>
+                <li>C) Error</li>
+                <li>D) 5 5</li>
+            </ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            <div class="answer-box">
+                <strong>Answer: B) 10</strong>
+                <div class="explanation"><code>int(y)</code> converts the string <code>"5"</code> into integer 5. Then 5 + 5 = 10.</div>
+            </div>
+        </div>
+
+        <!-- ==================== SECTION 2: DATA TYPES ==================== -->
+        <div class="section-title">2️⃣ Data Types</div>
+
+        <!-- Q5 -->
+        <div class="question-card">
+            <div class="q-text">
+                <span class="q-number">5</span>
+                What is the data type of the value <code>3.14</code> in Python?
+                <span class="topic-tag">Data Types</span>
+            </div>
+            <ul class="options">
+                <li>A) int</li>
+                <li>B) float</li>
+                <li>C) double</li>
+                <li>D) decimal</li>
+            </ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            <div class="answer-box">
+                <strong>Answer: B) float</strong>
+                <div class="explanation">Numbers with a decimal point are of type <code>float</code> in Python. There is no separate <code>double</code> type like in some other languages.</div>
+            </div>
+        </div>
+
+        <!-- Q6 -->
+        <div class="question-card">
+            <div class="q-text">
+                <span class="q-number">6</span>
+                Which of the following is a <strong>mutable</strong> data type in Python?
+                <span class="topic-tag">Data Types</span>
+            </div>
+            <ul class="options">
+                <li>A) tuple</li>
+                <li>B) str</li>
+                <li>C) list</li>
+                <li>D) int</li>
+            </ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            <div class="answer-box">
+                <strong>Answer: C) list</strong>
+                <div class="explanation">Lists are mutable (can be changed after creation). Tuples, strings, and integers are immutable.</div>
+            </div>
+        </div>
+
+        <!-- Q7 -->
+        <div class="question-card">
+            <div class="q-text">
+                <span class="q-number">7</span>
+                What will be the output of the following code?
+                <span class="topic-tag">Data Types</span>
+            </div>
+            <div class="code-block">
+data = [10, 20, 30, 40]<br>
+print(data[1:3])
+            </div>
+            <ul class="options">
+                <li>A) [10, 20]</li>
+                <li>B) [20, 30]</li>
+                <li>C) [20, 30, 40]</li>
+                <li>D) [10, 20, 30]</li>
+            </ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            <div class="answer-box">
+                <strong>Answer: B) [20, 30]</strong>
+                <div class="explanation">Slicing <code>data[1:3]</code> means start at index 1 and go up to (but not including) index 3. So it returns elements at index 1 and 2.</div>
+            </div>
+        </div>
+
+        <!-- Q8 -->
+        <div class="question-card">
+            <div class="q-text">
+                <span class="q-number">8</span>
+                Which of the following creates a dictionary in Python?
+                <span class="topic-tag">Data Types</span>
+            </div>
+            <ul class="options">
+                <li>A) d = [1, 2, 3]</li>
+                <li>B) d = (1, 2, 3)</li>
+                <li>C) d = {1: "one", 2: "two"}</li>
+                <li>D) d = {1, 2, 3}</li>
+            </ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            <div class="answer-box">
+                <strong>Answer: C) d = {1: "one", 2: "two"}</strong>
+                <div class="explanation">
+                    Dictionaries use curly braces with key:value pairs.<br>
+                    <code>{1, 2, 3}</code> creates a set. Lists use <code>[]</code>, tuples use <code>()</code>.
+                </div>
+            </div>
+        </div>
+
+        <!-- Q9 -->
+        <div class="question-card">
+            <div class="q-text">
+                <span class="q-number">9</span>
+                What is the output of this code?
+                <span class="topic-tag">Data Types</span>
+            </div>
+            <div class="code-block">
+a = (1, 2, 3)<br>
+print(type(a))
+            </div>
+            <ul class="options">
+                <li>A) &lt;class 'list'&gt;</li>
+                <li>B) &lt;class 'tuple'&gt;</li>
+                <li>C) &lt;class 'set'&gt;</li>
+                <li>D) &lt;class 'dict'&gt;</li>
+            </ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            <div class="answer-box">
+                <strong>Answer: B) &lt;class 'tuple'&gt;</strong>
+                <div class="explanation">Parentheses <code>()</code> create a tuple. Tuples are ordered and immutable.</div>
+            </div>
+        </div>
+
+        <!-- Q10 -->
+        <div class="question-card">
+            <div class="q-text">
+                <span class="q-number">10</span>
+                What does the following code print?
+                <span class="topic-tag">Data Types</span>
+            </div>
+            <div class="code-block">
+s = "Python"<br>
+print(s[0], s[-1], len(s))
+            </div>
+            <ul class="options">
+                <li>A) P n 6</li>
+                <li>B) P o 6</li>
+                <li>C) y n 5</li>
+                <li>D) P n 5</li>
+            </ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            <div class="answer-box">
+                <strong>Answer: A) P n 6</strong>
+                <div class="explanation">
+                    <code>s[0]</code> → first character 'P'<br>
+                    <code>s[-1]</code> → last character 'n'<br>
+                    <code>len(s)</code> → 6
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== SECTION 3: CONDITIONAL STATEMENTS ==================== -->
+        <div class="section-title">3️⃣ Conditional Statements (if / elif / else)</div>
+
+        <!-- Q11 -->
+        <div class="question-card">
+            <div class="q-text">
+                <span class="q-number">11</span>
+                What will be the output of the following code?
+                <span class="topic-tag">Conditionals</span>
+            </div>
+            <div class="code-block">
+x = 15<br>
+if x > 10:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print("Greater")<br>
+elif x == 15:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print("Equal")<br>
+else:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print("Smaller")
+            </div>
+            <ul class="options">
+                <li>A) Greater</li>
+                <li>B) Equal</li>
+                <li>C) Smaller</li>
+                <li>D) Greater Equal</li>
+            </ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            <div class="answer-box">
+                <strong>Answer: A) Greater</strong>
+                <div class="explanation">The first condition <code>x > 10</code> is True, so "Greater" is printed. The <code>elif</code> and <code>else</code> blocks are skipped once a true condition is found.</div>
+            </div>
+        </div>
+
+        <!-- Q12 -->
+        <div class="question-card">
+            <div class="q-text">
+                <span class="q-number">12</span>
+                Which keyword is used for multiple conditions in Python?
+                <span class="topic-tag">Conditionals</span>
+            </div>
+            <ul class="options">
+                <li>A) else if</li>
+                <li>B) elseif</li>
+                <li>C) elif</li>
+                <li>D) elsif</li>
+            </ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            <div class="answer-box">
+                <strong>Answer: C) elif</strong>
+                <div class="explanation">Python uses <code>elif</code> (short for "else if") to check multiple conditions. There is no <code>else if</code> or <code>elseif</code> keyword.</div>
+            </div>
+        </div>
+
+        <!-- Q13 -->
+        <div class="question-card">
+            <div class="q-text">
+                <span class="q-number">13</span>
+                What is the output?
+                <span class="topic-tag">Conditionals</span>
+            </div>
+            <div class="code-block">
+num = 7<br>
+if num % 2 == 0:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print("Even")<br>
+else:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print("Odd")
+            </div>
+            <ul class="options">
+                <li>A) Even</li>
+                <li>B) Odd</li>
+                <li>C) 7</li>
+                <li>D) Error</li>
+            </ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            <div class="answer-box">
+                <strong>Answer: B) Odd</strong>
+                <div class="explanation"><code>7 % 2</code> equals 1 (not 0), so the condition is False and the <code>else</code> block executes → "Odd".</div>
+            </div>
+        </div>
+
+        <!-- Q14 -->
+        <div class="question-card">
+            <div class="q-text">
+                <span class="q-number">14</span>
+                What will this code print?
+                <span class="topic-tag">Conditionals</span>
+            </div>
+            <div class="code-block">
+a = 10<br>
+b = 20<br>
+print("Yes") if a &lt; b else print("No")
+            </div>
+            <ul class="options">
+                <li>A) Yes</li>
+                <li>B) No</li>
+                <li>C) True</li>
+                <li>D) Syntax Error</li>
+            </ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            <div class="answer-box">
+                <strong>Answer: A) Yes</strong>
+                <div class="explanation">This is a ternary (conditional) expression. Since <code>a &lt; b</code> is True, it prints "Yes".</div>
+            </div>
+        </div>
+
+        <!-- Q15 -->
+        <div class="question-card">
+            <div class="q-text">
+                <span class="q-number">15</span>
+                Predict the output:
+                <span class="topic-tag">Conditionals</span>
+            </div>
+            <div class="code-block">
+score = 85<br>
+if score >= 90:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;grade = "A"<br>
+elif score >= 80:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;grade = "B"<br>
+elif score >= 70:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;grade = "C"<br>
+else:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;grade = "D"<br>
+print(grade)
+            </div>
+            <ul class="options">
+                <li>A) A</li>
+                <li>B) B</li>
+                <li>C) C</li>
+                <li>D) D</li>
+            </ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            <div class="answer-box">
+                <strong>Answer: B) B</strong>
+                <div class="explanation">score = 85 is less than 90 but greater than or equal to 80, so the second condition is True and grade becomes "B".</div>
+            </div>
+        </div>
+
+        <!-- ==================== SECTION 4: LOOPS ==================== -->
+        <div class="section-title">4️⃣ Loops (for & while)</div>
+
+        <!-- Q16 -->
+        <div class="question-card">
+            <div class="q-text">
+                <span class="q-number">16</span>
+                What is the output of this code?
+                <span class="topic-tag">Loops</span>
+            </div>
+            <div class="code-block">
+for i in range(3):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print(i, end=" ")
+            </div>
+            <ul class="options">
+                <li>A) 1 2 3</li>
+                <li>B) 0 1 2</li>
+                <li>C) 0 1 2 3</li>
+                <li>D) 1 2</li>
+            </ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            <div class="answer-box">
+                <strong>Answer: B) 0 1 2</strong>
+                <div class="explanation"><code>range(3)</code> generates numbers from 0 up to (but not including) 3 → 0, 1, 2.</div>
+            </div>
+        </div>
+
+        <!-- Q17 -->
+        <div class="question-card">
+            <div class="q-text">
+                <span class="q-number">17</span>
+                How many times will the following loop run?
+                <span class="topic-tag">Loops</span>
+            </div>
+            <div class="code-block">
+count = 0<br>
+while count &lt; 5:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print(count)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;count += 1
+            </div>
+            <ul class="options">
+                <li>A) 4 times</li>
+                <li>B) 5 times</li>
+                <li>C) 6 times</li>
+                <li>D) Infinite times</li>
+            </ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            <div class="answer-box">
+                <strong>Answer: B) 5 times</strong>
+                <div class="explanation">count goes from 0 → 1 → 2 → 3 → 4. When count becomes 5, the condition <code>count &lt; 5</code> becomes False and the loop stops. So it runs 5 times.</div>
+            </div>
+        </div>
+
+        <!-- Q18 -->
+        <div class="question-card">
+            <div class="q-text">
+                <span class="q-number">18</span>
+                What does the <code>break</code> statement do inside a loop?
+                <span class="topic-tag">Loops</span>
+            </div>
+            <ul class="options">
+                <li>A) Skips the current iteration</li>
+                <li>B) Terminates the loop immediately</li>
+                <li>C) Restarts the loop from the beginning</li>
+                <li>D) Does nothing</li>
+            </ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            <div class="answer-box">
+                <strong>Answer: B) Terminates the loop immediately</strong>
+                <div class="explanation"><code>break</code> exits the loop completely. <code>continue</code> skips the rest of the current iteration and moves to the next one.</div>
+            </div>
+        </div>
+
+        <!-- Q19 -->
+        <div class="question-card">
+            <div class="q-text">
+                <span class="q-number">19</span>
+                What will be printed?
+                <span class="topic-tag">Loops</span>
+            </div>
+            <div class="code-block">
+for i in range(1, 6):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if i == 3:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;continue<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print(i, end=" ")
+            </div>
+            <ul class="options">
+                <li>A) 1 2 3 4 5</li>
+                <li>B) 1 2 4 5</li>
+                <li>C) 1 2</li>
+                <li>D) 3 4 5</li>
+            </ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            <div class="answer-box">
+                <strong>Answer: B) 1 2 4 5</strong>
+                <div class="explanation">When <code>i == 3</code>, the <code>continue</code> statement skips the <code>print</code> for that iteration. So 3 is not printed.</div>
+            </div>
+        </div>
+
+        <!-- Q20 -->
+        <div class="question-card">
+            <div class="q-text">
+                <span class="q-number">20</span>
+                What is the output of this nested loop?
+                <span class="topic-tag">Loops</span>
+            </div>
+            <div class="code-block">
+for i in range(2):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;for j in range(2):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(i, j)
+            </div>
+            <ul class="options">
+                <li>A) 0 0<br>&nbsp;&nbsp;&nbsp;&nbsp;0 1<br>&nbsp;&nbsp;&nbsp;&nbsp;1 0<br>&nbsp;&nbsp;&nbsp;&nbsp;1 1</li>
+                <li>B) 0 0<br>&nbsp;&nbsp;&nbsp;&nbsp;1 1</li>
+                <li>C) 0 1<br>&nbsp;&nbsp;&nbsp;&nbsp;1 0</li>
+                <li>D) Error</li>
+            </ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            <div class="answer-box">
+                <strong>Answer: A)</strong>
+                <div class="explanation">
+                    Outer loop runs for i = 0 and i = 1.<br>
+                    For each i, inner loop runs for j = 0 and j = 1.<br>
+                    So the pairs printed are: (0,0), (0,1), (1,0), (1,1).
+                </div>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls">
+            <button class="btn-control" onclick="showAllAnswers()">🔓 Show All Answers</button>
+            <button class="btn-control" onclick="hideAllAnswers()">🔒 Hide All Answers</button>
+        </div>
+
+        <footer>
+            <p>📚 Python Basics Quiz • Designed for students learning Python fundamentals</p>
+            <p style="margin-top:8px; font-size:0.9rem;">Topics: Variables • Operators • Data Types • if-elif-else • for & while loops • break & continue</p>
+        </footer>
+    </div>
+
+    <script>
+        function toggleAnswer(btn) {
+            const answerBox = btn.nextElementSibling;
+            const isVisible = answerBox.classList.contains('show');
+
+            if (isVisible) {
+                answerBox.classList.remove('show');
+                btn.textContent = 'Show Answer';
+                btn.classList.remove('revealed');
+            } else {
+                answerBox.classList.add('show');
+                btn.textContent = 'Hide Answer';
+                btn.classList.add('revealed');
+            }
+        }
+
+        function showAllAnswers() {
+            document.querySelectorAll('.answer-box').forEach(box => {
+                box.classList.add('show');
+            });
+            document.querySelectorAll('.btn-answer').forEach(btn => {
+                btn.textContent = 'Hide Answer';
+                btn.classList.add('revealed');
+            });
+        }
+
+        function hideAllAnswers() {
+            document.querySelectorAll('.answer-box').forEach(box => {
+                box.classList.remove('show');
+            });
+            document.querySelectorAll('.btn-answer').forEach(btn => {
+                btn.textContent = 'Show Answer';
+                btn.classList.remove('revealed');
+            });
+        }
+    </script>
+</body>
+</html>
